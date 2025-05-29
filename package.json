@@ -1,5 +1,5 @@
 {
-  "name": "cinerex",
+  "name": "cinerex-front",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,16 +9,25 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@heroui/react": "^2.7.5",
+    "@heroui/select": "^2.4.16",
+    "@heroui/system": "^2.4.12",
+    "@heroui/theme": "^2.4.12",
+    "axios": "^1.8.4",
+    "framer-motion": "^12.5.0",
+    "generate-password": "^1.7.1",
+    "next": "^15.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "next": "15.3.2"
+    "react-icons": "^5.5.0"
   },
   "devDependencies": {
-    "typescript": "^5",
     "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4"
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10",
+    "postcss": "^8",
+    "tailwindcss": "^3",
+    "typescript": "^5"
   }
 }
