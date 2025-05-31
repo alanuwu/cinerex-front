@@ -71,7 +71,7 @@ export default function SignUpForm() {
       console.log("Registro exitoso:", data);
       alert("Registro exitoso. Redirigiendo al login");
 
-      router.push("/dashboard");
+      router.push("/login");
     } catch (err: any) {
       setError(err.message || "Ocurrió un error inesperado.");
     } finally {
