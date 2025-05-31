@@ -117,13 +117,16 @@ export default function MovieForm({
         <div>
           <label className="block font-semibold mb-1">Trailer</label>
           <div className="aspect-video w-full max-w-md mx-auto bg-black rounded-lg overflow-hidden border-2 border-blue-200">
-            <iframe
-              src={movie.trailerUrl}
-              title="Trailer"
-              className="w-full h-40"
-              allowFullScreen
-            />
-          </div>
+            {movie.trailerUrl ? (
+      <iframe
+      src={movie.trailerUrl}
+      title="Trailer"
+      className="w-full h-40"
+    />
+  ) : (
+    <p className="text-center text-white py-10">Trailer no disponible</p>
+  )}
+</div>
         </div>
       </section>
     </main>
