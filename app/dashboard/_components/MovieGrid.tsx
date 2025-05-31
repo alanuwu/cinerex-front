@@ -2,6 +2,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { API_URL } from '@/constants'
 
 type Movie = {
@@ -41,14 +42,19 @@ const MovieGrid = () => {
         }}
       >
         {movies.map((movie) => (
-          <div key={movie.id} className="overflow-hidden" style={{ width: '239px' }}>
+          <Link
+            key={movie.movieId}
+            href={`/dashboard/movie/${movie.movieId}`}
+            className="overflow-hidden"
+            style={{ width: '239px' }}
+          >
             <img
               src={movie.movieImageUrl}
               alt={movie.title}
               className="w-[239px] h-[358px] object-cover block"
             />
             <div className="text-center font-semibold text-sm mt-1">{movie.title}</div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>
