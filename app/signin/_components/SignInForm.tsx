@@ -2,6 +2,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation"; 
 import { API_URL } from "@/constants";
 import {
   EnvelopeIcon,
@@ -18,20 +19,19 @@ export default function SignUpForm() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Regex simple para validar email
+  const router = useRouter(); // ✅ Hook para redirigir
+
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
-    // Validación email con regex
     if (!emailRegex.test(userEmail)) {
       setError("El correo electrónico no es válido.");
       return;
     }
 
-    // Validación longitud contraseña
     if (userPassword.length < 8) {
       setError("La contraseña debe tener al menos 8 caracteres.");
       return;
@@ -69,11 +69,9 @@ export default function SignUpForm() {
 
       const data = await response.json();
       console.log("Registro exitoso:", data);
+      alert("Registro exitoso. Redirigiendo al login");
 
-      setUserEmail("");
-      setUserPassword("");
-      setConfirmPassword("");
-      setError("");
+      router.push("/dashboard");
     } catch (err: any) {
       setError(err.message || "Ocurrió un error inesperado.");
     } finally {
