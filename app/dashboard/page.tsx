@@ -1,9 +1,11 @@
 
-export default function Home() {
-return (
-  <div className="px-10 font-extrabold text-justify">
-    Dashboard Cinerex
-  </div>
-)
+import Navbar from './_components/Navbar'
 
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <>
+      <Navbar />
+      <main className="p-4">{children}</main>
+    </>
+  )
 }
