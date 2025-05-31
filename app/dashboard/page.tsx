@@ -1,6 +1,6 @@
-import Carrousel from './_components/Carrousel.tsx'
-import MovieGrid from './_components/MovieGrid.tsx'
-import Navbar from './_components/Navbar'
+import Carrousel from './_components/Carrousel';
+import MovieGrid from './_components/MovieGrid';
+import Navbar from './_components/Navbar';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -12,5 +12,5 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </div>
       <main className="p-4">{children}</main>
     </>
-  )
+  );
 }
