@@ -1,5 +1,9 @@
 import React from "react";
 
+
+
+
+//CAMBIAR A ENTIDADES DEL ARCHIVO ENTITIES
 type Movie = {
   movieImageUrl: string;
   movieTitle: string;

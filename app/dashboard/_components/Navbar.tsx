@@ -1,4 +1,3 @@
-
 'use client'
 
 import { useState } from 'react'
@@ -11,18 +10,18 @@ const Navbar = () => {
   const toggleMenu = () => setIsOpen(!isOpen)
 
   const navItems = [
-    { label: 'Inicio', href: '/' },
-    { label: 'Películas', href: '/peliculas' },
+    { label: 'Inicio', href: '/dashboard' },
+    { label: 'Películas', href: '/dashboard/billboard' },
     { label: 'Mis Boletos', href: '/boletos' },
     { label: 'Contacto', href: '/contacto' },
   ]
 
   return (
-    <nav className="bg-white shadow-md">
+    <nav className="bg-gray-900 shadow-md border-b border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link href="/" className="text-2xl font-bold text-gray-800">
+          <Link href="/" className="text-2xl font-bold text-yellow-400">
             CineRex
           </Link>
 
@@ -32,7 +31,7 @@ const Navbar = () => {
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
+                className="text-gray-400 hover:text-yellow-400 transition-colors font-medium"
               >
                 {item.label}
               </Link>
@@ -43,7 +42,8 @@ const Navbar = () => {
           <div className="md:hidden">
             <button
               onClick={toggleMenu}
-              className="text-gray-700 hover:text-gray-900 focus:outline-none"
+              className="text-gray-400 hover:text-yellow-400 focus:outline-none"
+              aria-label="Toggle menu"
             >
               {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -53,14 +53,14 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden px-4 pb-4">
+        <div className="md:hidden px-4 pb-4 bg-gray-900 border-t border-gray-800">
           <div className="space-y-2">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => setIsOpen(false)}
-                className="block text-gray-700 hover:text-blue-600 font-medium"
+                className="block text-gray-400 hover:text-yellow-400 font-medium"
               >
                 {item.label}
               </Link>

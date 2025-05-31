@@ -1,10 +1,12 @@
-import { cookies } from 'next/headers';
+import { TOKEN_NAME } from "@/constants";
+import { cookies } from "next/headers";
+import { cache } from "react";
 
-export async function getAuthHeaders() {
+export const authHeaders = cache(async () => {
   const cookieStore = await cookies(); 
-  const token = cookieStore.get('token')?.value;
+  const token = cookieStore.get(TOKEN_NAME)?.value;
 
   return {
     Authorization: `Bearer ${token}`,
   };
-}
+});
