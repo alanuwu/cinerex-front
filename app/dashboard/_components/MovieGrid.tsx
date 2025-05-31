@@ -31,20 +31,26 @@ const MovieGrid = () => {
   }, [])
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-4">
-      {movies.map((movie) => (
-        <div
-          key={movie.id}
-          className="rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300"
-        >
-          <img
-            src={movie.movieImageUrl}
-            alt={movie.title}
-            className="w-full h-64 object-cover"
-          />
-          <div className="p-2 text-center font-semibold">{movie.title}</div>
-        </div>
-      ))}
+    <div className="p-4">
+      <h2 className="text-2xl font-bold mb-4 text-center">Nuevos estrenos</h2>
+      <div
+        className="grid p-0 justify-items-center"
+        style={{
+          gridTemplateColumns: 'repeat(auto-fit, minmax(239px, 1fr))',
+          gap: '0px',
+        }}
+      >
+        {movies.map((movie) => (
+          <div key={movie.id} className="overflow-hidden" style={{ width: '239px' }}>
+            <img
+              src={movie.movieImageUrl}
+              alt={movie.title}
+              className="w-[239px] h-[358px] object-cover block"
+            />
+            <div className="text-center font-semibold text-sm mt-1">{movie.title}</div>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
