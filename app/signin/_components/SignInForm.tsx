@@ -10,6 +10,7 @@ import {
   EyeIcon,
   EyeSlashIcon,
 } from "@heroicons/react/24/outline";
+import { label } from "framer-motion/client";
 
 export default function SignUpForm() {
   const [userEmail, setUserEmail] = useState("");
@@ -19,7 +20,7 @@ export default function SignUpForm() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const router = useRouter(); // ✅ Hook para redirigir
+  const router = useRouter(); 
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

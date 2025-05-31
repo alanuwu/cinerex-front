@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { API_URL } from "@/constants";
 import {
   EnvelopeIcon,
@@ -15,6 +16,7 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -50,21 +52,22 @@ export default function LoginForm() {
         );
       }
 
+      // Manejo de respuesta (token o JSON)
       let data;
       const contentType = response.headers.get("content-type");
       if (contentType && contentType.includes("application/json")) {
         data = await response.json();
-        console.log("Login exitoso:", data);
       } else {
         data = await response.text();
-        console.log("Login exitoso, token:", data);
       }
 
-      // Aquí puedes redirigir o guardar el token si lo necesitas
-
+      // Aquí puedes guardar el token si lo necesitas
       setUserEmail("");
       setUserPassword("");
       setError("");
+
+      // Redirige al dashboard
+      router.push("/dashboard");
     } catch (err: any) {
       setError(err.message || "Ocurrió un error inesperado.");
     } finally {
