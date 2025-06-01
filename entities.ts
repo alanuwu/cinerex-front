@@ -48,6 +48,8 @@ export interface Movie {
 
   movieImageUrl: string;
 
+  movieTrailer: string;
+
   showtimes: Showtime[];
 }
 

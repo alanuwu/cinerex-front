@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { API_URL } from '@/constants'
 
 type Movie = {
-  id: number
+  movieId: number
   title: string
   movieImageUrl: string
 }

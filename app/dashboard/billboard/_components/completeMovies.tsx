@@ -52,7 +52,7 @@ export default async function CompleteMovies() {
                 {movie.movieDescription}
               </p>
               <a
-                href={"/"}
+                href={movie.movieTrailer}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block mt-auto bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 font-semibold text-center transition"
