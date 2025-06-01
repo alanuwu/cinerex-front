@@ -1,8 +1,6 @@
 //AQUI VAN TODAS LAS ENTIDADES QUE TENEMOS EN BACK
 // A CONSIDERAR LO DE LOS ASIENTOS Y RESERVACIONES
 
-
-
 export interface User {
   userId: string;
 
@@ -36,21 +34,19 @@ export interface Movie {
 
   movieTitle: string;
 
-
   movieDescription: string;
-
 
   movieDurationMinutes: number;
 
-
   movieGenre: string;
-
 
   movieImageUrl: string;
 
   movieTrailer: string;
 
   showtimes: Showtime[];
+
+
 }
 
 export interface Room{
@@ -75,11 +71,15 @@ export interface Showtime{
   price: number;
   remainingSeats: number;
 
+  lenguage: string; 
+
   movie: Movie | string;
 
   room:   Room | string;
 
   tickets: Ticket[];
+
+
 }
 
 export interface Ticket {
