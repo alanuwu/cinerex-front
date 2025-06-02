@@ -1,5 +1,6 @@
 import TermsAndConditions from './_components/TermsAndConditions';
 import Navbar from '../dashboard/_components/Navbar';
+import Footer from '../dashboard/_components/Footer'
 
 export default function TermsPage() {
   return (
@@ -8,8 +9,7 @@ export default function TermsPage() {
       <main className="flex-grow">
         <TermsAndConditions />
       </main>
+      <Footer />
     </div>
   );
 }
-
-
