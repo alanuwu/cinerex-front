@@ -1,9 +1,9 @@
-
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid'
 import { API_URL } from '@/constants'
+import Link from 'next/link'
 
 type Movie = {
   movieId: number
@@ -74,15 +74,17 @@ const MovieCarousel = () => {
               className="flex-shrink-0 px-1"
               style={{ width: `${100 / movies.length}%` }}
             >
-              <img
-                src={movie.movieImageUrl}
-                alt={movie.title}
-                className="w-full h-[358px] object-cover rounded-lg select-none"
-                draggable={false}
-              />
-              <div className="text-center font-semibold text-sm mt-1 text-gray-800">
-                {movie.title}
-              </div>
+              <Link href={`/dashboard/movie/${movie.movieId}`}>
+                <img
+                  src={movie.movieImageUrl}
+                  alt={movie.title}
+                  className="w-full h-[358px] object-cover rounded-lg select-none cursor-pointer hover:opacity-90 transition"
+                  draggable={false}
+                />
+                <div className="text-center font-semibold text-sm mt-1 text-gray-800">
+                  {movie.title}
+                </div>
+              </Link>
             </div>
           ))}
         </div>

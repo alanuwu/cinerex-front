@@ -14,9 +14,9 @@ export default function ContactoPage() {
     message: '',
     movie: '',
   })
-
   const [movies, setMovies] = useState<Movie[]>([])
   const [status, setStatus] = useState('')
+  const [submissions, setSubmissions] = useState<typeof formData[]>([]) // Cambia a array
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -43,8 +43,8 @@ export default function ContactoPage() {
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    console.log('Enviando formulario:', formData)
     setStatus('Gracias por contactarnos. Te responderemos pronto.')
+    setSubmissions(prev => [formData, ...prev]) // Agrega la nueva submission al inicio
     setFormData({ name: '', email: '', message: '', movie: '' })
   }
 
@@ -130,13 +130,31 @@ export default function ContactoPage() {
         {/* Botón */}
         <button
           type="submit"
-          className="py-3 text-lg bg-red-700 text-white rounded hover:bg-red-800 transition-colors"
+          className="py-3 text-lg bg-yellow-400 text-black rounded hover:bg-yellow-500 transition-colors font-bold"
         >
           Enviar
         </button>
       </form>
 
       {status && <p className="mt-4 text-green-600">{status}</p>}
+
+      {/* Cards acumulables */}
+      {submissions.length > 0 && (
+        <div className="mt-6 flex flex-col gap-4">
+          {submissions.map((submission, idx) => (
+            <div
+              key={idx}
+              className="p-4 bg-white rounded shadow border border-gray-200 text-left"
+            >
+              <h3 className="text-lg font-bold mb-2 text-red-700">Tu mensaje enviado</h3>
+              <p><span className="font-semibold">Nombre:</span> {submission.name}</p>
+              <p><span className="font-semibold">Email:</span> {submission.email}</p>
+              <p><span className="font-semibold">Película:</span> {submission.movie}</p>
+              <p><span className="font-semibold">Mensaje:</span> {submission.message}</p>
+            </div>
+          ))}
+        </div>
+      )}
 
       <hr className="my-8" />
 
