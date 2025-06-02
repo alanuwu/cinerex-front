@@ -99,23 +99,6 @@ export default function MovieForm({
       >
         <h2 className="text-xl font-bold mb-4">Detalles de la función</h2>
         <div className="mb-4">
-          <label className="block font-semibold mb-1">Funciones disponibles</label>
-          <ul className="list-disc pl-5">
-            {movie.showtimes.map((showtime: Showtime) => (
-              <li key={showtime.id} className="mb-1">
-                <span className="font-semibold">
-                  {new Date(showtime.dateTime).toLocaleString([], {
-                    dateStyle: "short",
-                    timeStyle: "short",
-                  })}
-                </span>
-                {" - "}
-                <span className="text-blue-700">{showtime.lenguage}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="mb-4">
           <label className="block font-semibold mb-1">Idioma</label>
           <div className="flex gap-4">
             {idiomas.map((idioma) => (
