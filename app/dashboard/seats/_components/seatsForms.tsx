@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import type { Movie, Room, Showtime } from "@/entities";
 
 export default function SeatsForms({
@@ -13,10 +13,18 @@ export default function SeatsForms({
 }) {
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
 
-  const roomName = room ? room.roomName : "Sala";
-  const roomCapacity = room ? room.roomCapacity : 96;
+  // Log para inspeccionar el contenido de selectedShowtime y room
+  useEffect(() => {
+    console.log("Selected Showtime:", selectedShowtime);
+    console.log("Room Data:", room);
+  }, [selectedShowtime, room]);
 
-  // Calcula columnas para que la sala sea lo más cuadrada posible (entre 8 y 16 columnas)
+  const getPrice = () => (selectedShowtime ? selectedShowtime.price : "N/A");
+  const getRoomName = () => (room ? room.roomName : "Sala no disponible");
+  const getRoomCapacity = () => (room ? room.roomCapacity : 0);
+
+  // Calcula columnas (entre 8 y 16 columnas)
+  const roomCapacity = getRoomCapacity();
   const columns = Math.max(8, Math.min(16, Math.ceil(Math.sqrt(roomCapacity))));
   const rows = Math.ceil(roomCapacity / columns);
 
@@ -30,7 +38,7 @@ export default function SeatsForms({
           ? `${String.fromCharCode(65 + i)}${j + 1}`
           : null;
       }
-    ).filter(Boolean)
+    ).filter((seat): seat is string => seat !== null) // Filtra valores null
   );
 
   const handleSeatClick = (seat: string) => {
@@ -47,7 +55,15 @@ export default function SeatsForms({
       <section className="flex-1 bg-white shadow-md p-6 rounded-2xl flex flex-col items-center">
         <h2 className="text-xl font-bold mb-4">Selecciona tus asientos</h2>
         <div className="border-b w-full mb-4" />
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center w-full">
+          {/* Pantalla simulada */}
+          <div className="w-3/4 mx-auto mb-6">
+            <div className="bg-gray-300 rounded-b-3xl h-8 flex items-center justify-center shadow-inner">
+              <span className="text-gray-600 font-semibold text-sm tracking-widest">
+                Pantalla
+              </span>
+            </div>
+          </div>
           <div className="bg-gray-100 p-6 rounded-lg shadow-md">
             {seatRows.map((row, i) => (
               <div key={i} className="flex justify-center mb-2">
@@ -55,20 +71,21 @@ export default function SeatsForms({
                   <button
                     key={seat}
                     className={`w-8 h-8 m-1 rounded-full border text-xs
-                      ${selectedSeats.includes(seat)
-                        ? "bg-green-500 text-white"
-                        : "bg-white hover:bg-blue-100"
+                      ${
+                        selectedSeats.includes(seat)
+                          ? "bg-blue-500 text-white"
+                          : "bg-white hover:bg-blue-100"
                       }`}
-                    onClick={() => handleSeatClick(seat!)}
+                    onClick={() => handleSeatClick(seat)}
                     disabled={false}
                   >
-                    {seat!.replace(/^[A-Z]/, "")}
+                    {seat.replace(/^[A-Z]/, "")}
                   </button>
                 ))}
               </div>
             ))}
           </div>
-          <div className="mt-2 text-xs text-gray-500">{roomName}</div>
+          <div className="mt-2 text-xs text-gray-500">{getRoomName()}</div>
         </div>
       </section>
       {/* Resumen y detalles de la película */}
@@ -84,10 +101,20 @@ export default function SeatsForms({
               {movie.movieTitle}
             </h3>
             <p className="text-gray-600 mb-2">
-              <span className="font-semibold">{movie.movieDurationMinutes} min</span>
+              <span className="font-semibold">
+                {movie.movieDurationMinutes} min
+              </span>
               | <span className="font-semibold">{movie.movieGenre}</span>
             </p>
           </div>
+        </div>
+        <div className="mt-4">
+          <label className="block font-semibold mb-1">Precio</label>
+          <div className="text-gray-700 min-h-[24px]">{`$${getPrice()}`}</div>
+        </div>
+        <div className="mt-4">
+          <label className="block font-semibold mb-1">Capacidad de la sala</label>
+          <div className="text-gray-700 min-h-[24px]">{getRoomCapacity()}</div>
         </div>
         <div className="mt-4">
           <label className="block font-semibold mb-1">Boletos (cantidad)</label>
@@ -102,10 +129,12 @@ export default function SeatsForms({
           </div>
         </div>
         <div className="mt-4">
-          <label className="block font-semibold mb-1">Order summary:</label>
+          <label className="block font-semibold mb-1">Resumen del pedido:</label>
           <div className="text-2xl font-bold text-green-700">
             {selectedShowtime
-              ? `$${(selectedSeats.length * selectedShowtime.price).toFixed(2)}`
+              ? `$${(selectedSeats.length * parseFloat(selectedShowtime.price)).toFixed(
+                  2
+                )}`
               : "$0.00"}
           </div>
         </div>
