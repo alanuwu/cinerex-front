@@ -64,16 +64,31 @@ export default function MovieForm({
       }) === diaSel
   );
 
-  // Redirigir al seleccionar "Siguiente"
+  //"Siguiente"
   const handleNext = () => {
     if (showtimeSel) {
-      router.push(`/seats/${showtimeSel}`);
+      // Buscar el showtime seleccionado
+      const showtimeObj = movie.showtimes.find((st) => st.id === showtimeSel);
+      // Obtener el roomId (puede ser string o Room)
+      let roomId = "";
+      if (showtimeObj) {
+        if (typeof showtimeObj.room === "string") {
+          roomId = showtimeObj.room;
+        } else if (
+          typeof showtimeObj.room === "object" &&
+          showtimeObj.room !== null
+        ) {
+          roomId = showtimeObj.room.roomId;
+        }
+      }
+      // Puedes pasar ambos como query params o en el path
+      router.push(`/dashboard/seats/${showtimeSel}?roomId=${roomId}`);
     }
   };
 
   return (
     <main className="p-4 flex flex-col md:flex-row gap-8">
-      {/* Sección de detalles de la función */}
+      {/*Detalles de la función*/}
       <section
         className="flex-1 bg-white shadow-md p-6"
         style={{
@@ -177,7 +192,7 @@ export default function MovieForm({
         </div>
       </section>
 
-      {/* Sección de información de la película */}
+      {/*Información de la película*/}
       <section
         className="flex-1 bg-white shadow-md p-6 flex flex-col gap-4"
         style={{

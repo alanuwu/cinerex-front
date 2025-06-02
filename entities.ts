@@ -75,7 +75,7 @@ export interface Showtime{
 
   movie: Movie | string;
 
-  room:   Room | string;
+  room:   Room  | string;
 
   tickets: Ticket[];
 
