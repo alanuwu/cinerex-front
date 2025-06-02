@@ -71,11 +71,11 @@ export interface Showtime{
   price: number;
   remainingSeats: number;
 
-  lenguage: string; 
+  movie: Movie;
 
-  movie: Movie | string;
+  room:   Room;
 
-  room:   Room  | string;
+   lenguage: string;
 
   tickets: Ticket[];
 

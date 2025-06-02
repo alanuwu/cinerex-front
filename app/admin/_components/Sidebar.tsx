@@ -6,12 +6,15 @@ import { UserCircle2, Phone, LayoutDashboard, Film, Ticket, LogOut, Users, Calen
 import { Customer, User } from '@/entities'
 import getRole from '@/app/(auth)/useRole'
 import getInformation from '@/app/(auth)/useEmail'
+import { useRouter } from 'next/navigation'
+import { logout } from '@/actions/logout'
 
 const Sidebar = () => {
   const [showUser, setShowUser] = useState(false)
   const [user, setUser] = useState<User | null>(null)
   const [customer, setCustomer] = useState<Customer | null>(null)
   const [role, setRole] = useState<string | null>(null)
+  const router = useRouter(); // Agrega esto
 
   const navItems = [
     { label: 'Dashboard', href: '/admin', icon: <LayoutDashboard size={20} /> },
@@ -43,6 +46,12 @@ const Sidebar = () => {
     }
     fetchUser()
   }, [])
+
+  // Función para cerrar sesión
+  const handleLogout = async () => {
+    await logout(); // elimina la cookie desde el servidor
+  router.push("/login");
+  };
 
   return (
     <aside className="h-screen w-72 bg-gray-900 border-r border-gray-800 flex flex-col justify-between fixed top-0 left-0 z-40">
@@ -124,7 +133,11 @@ const Sidebar = () => {
                   </Link>
                 </div>
               )}
-              <button className="w-full mt-4 bg-yellow-400 text-gray-900 rounded px-4 py-2 font-semibold hover:bg-yellow-300 transition flex items-center justify-center gap-2">
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="w-full mt-4 bg-yellow-400 text-gray-900 rounded px-4 py-2 font-semibold hover:bg-yellow-300 transition flex items-center justify-center gap-2"
+              >
                 <LogOut size={18} /> Cerrar sesión
               </button>
             </div>

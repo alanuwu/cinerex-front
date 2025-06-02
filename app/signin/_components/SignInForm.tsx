@@ -12,8 +12,7 @@ import {
   PhoneIcon,
 } from "@heroicons/react/24/outline";
 import { Customer } from "@/entities";
-
-
+import Link from "next/link";
 
 export default function SignUpForm() {
   const [customer, setCustomer] = useState<Omit<Customer, "customerId" | "tickets" | "user">>({
@@ -117,165 +116,181 @@ export default function SignUpForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-md bg-white rounded-2xl shadow-lg p-6 space-y-5"
-      >
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">
-          Crear una cuenta
-        </h2>
-
-        {/* Nombre */}
-        <label htmlFor="customerName" className="block text-sm font-medium mb-1">
-          Nombre
-        </label>
-        <div className="relative mb-2">
-          <UserIcon className="w-5 h-5 text-gray-400 absolute top-2.5 left-3" />
-          <input
-            type="text"
-            id="customerName"
-            name="customerName"
-            value={customer.customerName}
-            onChange={handleChange}
-            className="pl-10 pr-3 py-2 w-full rounded-md border border-gray-300 focus:outline-none focus:ring focus:ring-blue-500 text-base"
-            required
-          />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#1e293b] via-[#334155] to-[#0f172a] px-0">
+      <div className="w-full max-w-[420px] bg-[#f8fafc] rounded-xl shadow-2xl p-10 space-y-7 border border-[#334155]">
+        {/* Logo y título */}
+        <div className="flex flex-col items-center mb-2">
+          <span className="text-4xl font-extrabold text-[#38bdf8] drop-shadow mb-1 tracking-tight">
+            CineRex
+          </span>
+          <span className="text-base text-[#0ea5e9] font-semibold mb-2 tracking-wide">
+            ¡Crea tu cuenta y disfruta del cine!
+          </span>
         </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Nombre */}
+          <label htmlFor="customerName" className="block text-sm font-medium mb-1 text-[#334155]">
+            Nombre
+          </label>
+          <div className="relative mb-2">
+            <UserIcon className="w-5 h-5 text-[#38bdf8] absolute top-2.5 left-3" />
+            <input
+              type="text"
+              id="customerName"
+              name="customerName"
+              value={customer.customerName}
+              onChange={handleChange}
+              className="pl-10 pr-3 py-2 w-full rounded-lg border border-[#bae6fd] focus:outline-none focus:ring-2 focus:ring-[#38bdf8] text-base bg-[#e0f2fe]"
+              required
+            />
+          </div>
 
-        {/* Apellido */}
-        <label htmlFor="customerLastName" className="block text-sm font-medium mb-1">
-          Apellido
-        </label>
-        <div className="relative mb-2">
-          <UserIcon className="w-5 h-5 text-gray-400 absolute top-2.5 left-3" />
-          <input
-            type="text"
-            id="customerLastName"
-            name="customerLastName"
-            value={customer.customerLastName}
-            onChange={handleChange}
-            className="pl-10 pr-3 py-2 w-full rounded-md border border-gray-300 focus:outline-none focus:ring focus:ring-blue-500 text-base"
-            required
-          />
-        </div>
+          {/* Apellido */}
+          <label htmlFor="customerLastName" className="block text-sm font-medium mb-1 text-[#334155]">
+            Apellido
+          </label>
+          <div className="relative mb-2">
+            <UserIcon className="w-5 h-5 text-[#38bdf8] absolute top-2.5 left-3" />
+            <input
+              type="text"
+              id="customerLastName"
+              name="customerLastName"
+              value={customer.customerLastName}
+              onChange={handleChange}
+              className="pl-10 pr-3 py-2 w-full rounded-lg border border-[#bae6fd] focus:outline-none focus:ring-2 focus:ring-[#38bdf8] text-base bg-[#e0f2fe]"
+              required
+            />
+          </div>
 
-        {/* Teléfono */}
-        <label htmlFor="customerPhoneNumber" className="block text-sm font-medium mb-1">
-          Teléfono
-        </label>
-        <div className="relative mb-2">
-          <PhoneIcon className="w-5 h-5 text-gray-400 absolute top-2.5 left-3" />
-          <input
-            type="tel"
-            id="customerPhoneNumber"
-            name="customerPhoneNumber"
-            value={customer.customerPhoneNumber}
-            onChange={handleChange}
-            className="pl-10 pr-3 py-2 w-full rounded-md border border-gray-300 focus:outline-none focus:ring focus:ring-blue-500 text-base"
-            required
-          />
-        </div>
+          {/* Teléfono */}
+          <label htmlFor="customerPhoneNumber" className="block text-sm font-medium mb-1 text-[#334155]">
+            Teléfono
+          </label>
+          <div className="relative mb-2">
+            <PhoneIcon className="w-5 h-5 text-[#38bdf8] absolute top-2.5 left-3" />
+            <input
+              type="tel"
+              id="customerPhoneNumber"
+              name="customerPhoneNumber"
+              value={customer.customerPhoneNumber}
+              onChange={handleChange}
+              className="pl-10 pr-3 py-2 w-full rounded-lg border border-[#bae6fd] focus:outline-none focus:ring-2 focus:ring-[#38bdf8] text-base bg-[#e0f2fe]"
+              required
+            />
+          </div>
 
-        {/* Email */}
-        <label htmlFor="customerEmail" className="block text-sm font-medium mb-1">
-          Correo Electrónico
-        </label>
-        <div className="relative mb-2">
-          <EnvelopeIcon className="w-5 h-5 text-gray-400 absolute top-2.5 left-3" />
-          <input
-            type="email"
-            id="customerEmail"
-            name="customerEmail"
-            value={customer.customerEmail}
-            onChange={handleChange}
-            className={`pl-10 pr-3 py-2 w-full rounded-md border ${
-              error.toLowerCase().includes("correo")
-                ? "border-red-500"
-                : "border-gray-300"
-            } focus:outline-none focus:ring ${
-              error.toLowerCase().includes("correo")
-                ? "focus:ring-red-500 focus:border-red-500"
-                : "focus:ring-blue-500 focus:border-blue-500"
-            } text-base`}
-            required
-          />
-        </div>
+          {/* Email */}
+          <label htmlFor="customerEmail" className="block text-sm font-medium mb-1 text-[#334155]">
+            Correo Electrónico
+          </label>
+          <div className="relative mb-2">
+            <EnvelopeIcon className="w-5 h-5 text-[#38bdf8] absolute top-2.5 left-3" />
+            <input
+              type="email"
+              id="customerEmail"
+              name="customerEmail"
+              value={customer.customerEmail}
+              onChange={handleChange}
+              className={`pl-10 pr-3 py-2 w-full rounded-lg border ${
+                error.toLowerCase().includes("correo")
+                  ? "border-red-400"
+                  : "border-[#bae6fd]"
+              } focus:outline-none focus:ring-2 ${
+                error.toLowerCase().includes("correo")
+                  ? "focus:ring-red-400"
+                  : "focus:ring-[#38bdf8]"
+              } text-base bg-[#e0f2fe]`}
+              required
+            />
+          </div>
 
-        {/* Password */}
-        <label htmlFor="password" className="block text-sm font-medium mb-1">
-          Contraseña
-        </label>
-        <div className="relative mb-2">
-          <LockClosedIcon className="w-5 h-5 text-gray-400 absolute top-2.5 left-3" />
-          <input
-            type={showPassword ? "text" : "password"}
-            id="password"
-            value={userPassword}
-            onChange={(e) => setUserPassword(e.target.value)}
-            className={`pl-10 pr-10 py-2 w-full rounded-md border ${
-              error.toLowerCase().includes("contraseña")
-                ? "border-red-500"
-                : "border-gray-300"
-            } focus:outline-none focus:ring ${
-              error.toLowerCase().includes("contraseña")
-                ? "focus:ring-red-500 focus:border-red-500"
-                : "focus:ring-blue-500 focus:border-blue-500"
-            } text-base`}
-            required
-          />
-        </div>
+          {/* Password */}
+          <label htmlFor="password" className="block text-sm font-medium mb-1 text-[#334155]">
+            Contraseña
+          </label>
+          <div className="relative mb-2">
+            <LockClosedIcon className="w-5 h-5 text-[#38bdf8] absolute top-2.5 left-3" />
+            <input
+              type={showPassword ? "text" : "password"}
+              id="password"
+              value={userPassword}
+              onChange={(e) => setUserPassword(e.target.value)}
+              className={`pl-10 pr-10 py-2 w-full rounded-lg border ${
+                error.toLowerCase().includes("contraseña")
+                  ? "border-red-400"
+                  : "border-[#bae6fd]"
+              } focus:outline-none focus:ring-2 ${
+                error.toLowerCase().includes("contraseña")
+                  ? "focus:ring-red-400"
+                  : "focus:ring-[#38bdf8]"
+              } text-base bg-[#e0f2fe]`}
+              required
+            />
+          </div>
 
-        {/* Confirm Password */}
-        <label htmlFor="confirmPassword" className="block text-sm font-medium mb-1">
-          Repetir Contraseña
-        </label>
-        <div className="relative mb-2">
-          <LockClosedIcon className="w-5 h-5 text-gray-400 absolute top-2.5 left-3" />
-          <input
-            type={showPassword ? "text" : "password"}
-            id="confirmPassword"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className={`pl-10 pr-10 py-2 w-full rounded-md border ${
-              error.toLowerCase().includes("contraseña")
-                ? "border-red-500"
-                : "border-gray-300"
-            } focus:outline-none focus:ring ${
-              error.toLowerCase().includes("contraseña")
-                ? "focus:ring-red-500 focus:border-red-500"
-                : "focus:ring-blue-500 focus:border-blue-500"
-            } text-base`}
-            required
-          />
+          {/* Confirm Password */}
+          <label htmlFor="confirmPassword" className="block text-sm font-medium mb-1 text-[#334155]">
+            Repetir Contraseña
+          </label>
+          <div className="relative mb-2">
+            <LockClosedIcon className="w-5 h-5 text-[#38bdf8] absolute top-2.5 left-3" />
+            <input
+              type={showPassword ? "text" : "password"}
+              id="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className={`pl-10 pr-10 py-2 w-full rounded-lg border ${
+                error.toLowerCase().includes("contraseña")
+                  ? "border-red-400"
+                  : "border-[#bae6fd]"
+              } focus:outline-none focus:ring-2 ${
+                error.toLowerCase().includes("contraseña")
+                  ? "focus:ring-red-400"
+                  : "focus:ring-[#38bdf8]"
+              } text-base bg-[#e0f2fe]`}
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-2.5 text-[#38bdf8]"
+              tabIndex={-1}
+            >
+              {showPassword ? (
+                <EyeSlashIcon className="h-5 w-5" />
+              ) : (
+                <EyeIcon className="h-5 w-5" />
+              )}
+            </button>
+          </div>
+
+          {/* Error */}
+          {error && (
+            <p className="text-center text-red-500 text-sm font-medium">{error}</p>
+          )}
+
+          {/* Submit */}
           <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-2.5 text-gray-500"
-            tabIndex={-1}
+            type="submit"
+            className="w-full bg-gradient-to-r from-[#38bdf8] to-[#0ea5e9] text-white py-2 text-base rounded-lg font-bold hover:from-[#0ea5e9] hover:to-[#38bdf8] transition-colors shadow-lg disabled:opacity-50"
+            disabled={loading}
           >
-            {showPassword ? (
-              <EyeSlashIcon className="h-5 w-5" />
-            ) : (
-              <EyeIcon className="h-5 w-5" />
-            )}
+            {loading ? "Registrando..." : "Registrarse"}
           </button>
+        </form>
+        {/* Apartado para iniciar sesión */}
+        <div className="text-center mt-4">
+          <span className="text-[#334155] text-sm">
+            ¿Ya tienes cuenta?{" "}
+            <Link
+              href="/login"
+              className="text-[#0ea5e9] font-semibold hover:underline"
+            >
+              Inicia sesión aquí
+            </Link>
+          </span>
         </div>
-
-        {/* Error */}
-        {error && (
-          <p className="text-center text-red-500 text-sm font-medium">{error}</p>
-        )}
-
-        {/* Submit */}
-        <button
-          type="submit"
-          className="w-full bg-green-600 text-white py-2 text-base rounded-md hover:bg-green-700 transition-colors disabled:opacity-50"
-          disabled={loading}
-        >
-          {loading ? "Registrando..." : "Registrarse"}
-        </button>
-      </form>
+      </div>
     </div>
   );
 }
