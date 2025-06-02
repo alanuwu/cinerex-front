@@ -9,6 +9,7 @@ import {
   EyeIcon,
   EyeSlashIcon,
 } from "@heroicons/react/24/outline";
+import Link from "next/link";
 
 export default function LoginForm() {
   const [userEmail, setUserEmail] = useState("");
@@ -46,8 +47,6 @@ export default function LoginForm() {
         body: JSON.stringify({ userEmail, userPassword }),
       });
 
-    
-
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(
@@ -64,12 +63,10 @@ export default function LoginForm() {
         data = await response.text();
       }
 
-      // Aquí puedes guardar el token si lo necesitas
       setUserEmail("");
       setUserPassword("");
       setError("");
 
-      // Redirige al dashboard
       router.push("/dashboard");
     } catch (err: any) {
       setError(err.message || "Ocurrió un error inesperado.");
@@ -79,93 +76,110 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-2xl bg-white rounded-3xl shadow-lg p-10 space-y-8"
-      >
-        <h2 className="text-3xl font-bold text-center text-gray-800">
-          Iniciar sesión
-        </h2>
-
-        {/* Email */}
-        <div>
-          <label htmlFor="email" className="block text-lg font-medium mb-1">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f8fafc] via-[#e0f2fe] to-[#bae6fd] px-0">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-10 space-y-7 border border-[#bae6fd]">
+        {/* Logo y título */}
+        <div className="flex flex-col items-center mb-2">
+          <span className="text-4xl font-extrabold text-[#38bdf8] drop-shadow mb-1 tracking-tight">
+            CineRex
+          </span>
+          <span className="text-base text-[#0ea5e9] font-semibold mb-2 tracking-wide">
+            ¡Bienvenido! Inicia sesión para disfrutar del cine
+          </span>
+        </div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Email */}
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium mb-1 text-[#334155]"
+          >
             Correo Electrónico
           </label>
-          <div className="relative">
-            <EnvelopeIcon className="w-6 h-6 text-gray-400 absolute top-3 left-3" />
+          <div className="relative mb-2">
+            <EnvelopeIcon className="w-5 h-5 text-[#38bdf8] absolute top-2.5 left-3" />
             <input
               type="email"
               id="email"
               value={userEmail}
               onChange={(e) => setUserEmail(e.target.value)}
-              className={`pl-12 pr-4 py-3 w-full rounded-lg border ${
+              className={`pl-10 pr-3 py-2 w-full rounded-lg border ${
                 error.toLowerCase().includes("correo")
-                  ? "border-red-500"
-                  : "border-gray-300"
-              } focus:outline-none focus:ring ${
+                  ? "border-red-400"
+                  : "border-[#bae6fd]"
+              } focus:outline-none focus:ring-2 ${
                 error.toLowerCase().includes("correo")
-                  ? "focus:ring-red-500 focus:border-red-500"
-                  : "focus:ring-blue-500 focus:border-blue-500"
-              } text-lg`}
+                  ? "focus:ring-red-400"
+                  : "focus:ring-[#38bdf8]"
+              } text-base bg-[#e0f2fe]`}
               required
             />
           </div>
-        </div>
-
-        {/* Password */}
-        <div>
-          <label htmlFor="password" className="block text-lg font-medium mb-1">
+          {/* Password */}
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium mb-1 text-[#334155]"
+          >
             Contraseña
           </label>
-          <div className="relative">
-            <LockClosedIcon className="w-6 h-6 text-gray-400 absolute top-3 left-3" />
+          <div className="relative mb-2">
+            <LockClosedIcon className="w-5 h-5 text-[#38bdf8] absolute top-2.5 left-3" />
             <input
               type={showPassword ? "text" : "password"}
               id="password"
               value={userPassword}
               onChange={(e) => setUserPassword(e.target.value)}
-              className={`pl-12 pr-12 py-3 w-full rounded-lg border ${
+              className={`pl-10 pr-10 py-2 w-full rounded-lg border ${
                 error.toLowerCase().includes("contraseña")
-                  ? "border-red-500"
-                  : "border-gray-300"
-              } focus:outline-none focus:ring ${
+                  ? "border-red-400"
+                  : "border-[#bae6fd]"
+              } focus:outline-none focus:ring-2 ${
                 error.toLowerCase().includes("contraseña")
-                  ? "focus:ring-red-500 focus:border-red-500"
-                  : "focus:ring-blue-500 focus:border-blue-500"
-              } text-lg`}
+                  ? "focus:ring-red-400"
+                  : "focus:ring-[#38bdf8]"
+              } text-base bg-[#e0f2fe]`}
               required
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-3 text-gray-500"
+              className="absolute right-3 top-2.5 text-[#38bdf8]"
               tabIndex={-1}
             >
               {showPassword ? (
-                <EyeSlashIcon className="h-6 w-6" />
+                <EyeSlashIcon className="h-5 w-5" />
               ) : (
-                <EyeIcon className="h-6 w-6" />
+                <EyeIcon className="h-5 w-5" />
               )}
             </button>
           </div>
+          {/* Error */}
+          {error && (
+            <p className="text-center text-red-500 text-sm font-medium">
+              {error}
+            </p>
+          )}
+          {/* Submit */}
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-r from-[#38bdf8] to-[#0ea5e9] text-white py-2 text-base rounded-lg font-bold hover:from-[#0ea5e9] hover:to-[#38bdf8] transition-colors shadow-lg disabled:opacity-50"
+            disabled={loading}
+          >
+            {loading ? "Iniciando sesión..." : "Entrar"}
+          </button>
+        </form>
+        {/* Apartado para registrarse */}
+        <div className="text-center mt-4">
+          <span className="text-[#334155] text-sm">
+            ¿No tienes cuenta?{" "}
+            <Link
+              href="/signin"
+              className="text-[#0ea5e9] font-semibold hover:underline"
+            >
+              Regístrate aquí
+            </Link>
+          </span>
         </div>
-
-        {/* Error */}
-        {error && (
-          <p className="text-center text-red-500 text-sm font-medium">{error}</p>
-        )}
-
-        {/* Submit */}
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-3 text-lg rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
-          disabled={loading}
-        >
-          {loading ? "Iniciando sesión..." : "Entrar"}
-        </button>
-      </form>
+      </div>
     </div>
   );
 }

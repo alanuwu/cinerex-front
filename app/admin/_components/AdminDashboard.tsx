@@ -15,21 +15,30 @@ const AdminDashboard = () => (
       </p>
     </div>
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-6 w-full">
-      <div className="flex flex-col items-center bg-white rounded-xl shadow p-6 hover:shadow-lg transition">
+      <a
+        href="/admin/movies"
+        className="flex flex-col items-center bg-white rounded-xl shadow p-6 hover:shadow-lg transition hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-blue-300"
+      >
         <Film size={36} className="text-blue-500 mb-2" />
         <span className="font-semibold text-gray-700">Películas</span>
         <span className="text-xs text-gray-400 mt-1 text-center">Administra la cartelera y horarios</span>
-      </div>
-      <div className="flex flex-col items-center bg-white rounded-xl shadow p-6 hover:shadow-lg transition">
+      </a>
+      <a
+        href="/admin/users"
+        className="flex flex-col items-center bg-white rounded-xl shadow p-6 hover:shadow-lg transition hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-green-300"
+      >
         <Users size={36} className="text-green-500 mb-2" />
         <span className="font-semibold text-gray-700">Usuarios</span>
         <span className="text-xs text-gray-400 mt-1 text-center">Gestiona clientes y administradores</span>
-      </div>
-      <div className="flex flex-col items-center bg-white rounded-xl shadow p-6 hover:shadow-lg transition">
+      </a>
+      <a
+        href="/admin/tickets"
+        className="flex flex-col items-center bg-white rounded-xl shadow p-6 hover:shadow-lg transition hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-yellow-300"
+      >
         <Ticket size={36} className="text-yellow-500 mb-2" />
         <span className="font-semibold text-gray-700">Boletos</span>
         <span className="text-xs text-gray-400 mt-1 text-center">Consulta y administra ventas</span>
-      </div>
+      </a>
     </div>
   </div>
 );

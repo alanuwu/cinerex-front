@@ -7,6 +7,8 @@ import { Customer, User } from '@/entities'
 import { API_URL } from '@/constants'
 import getRole from '@/app/(auth)/useRole'
 import getInformation from '@/app/(auth)/useEmail'
+import { useRouter } from 'next/navigation'
+import { logout } from '@/actions/logout'
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -14,6 +16,7 @@ const Navbar = () => {
   const [user, setUser] = useState<User | null>(null)
    const [customer, setCustomer] = useState<Customer | null>(null)
   const [role, setRole] = useState<string | null>(null)
+  const router = useRouter();
 
   const toggleUser = () => setShowUser((prev) => !prev)
 
@@ -51,8 +54,10 @@ const Navbar = () => {
     fetchUser()
   }, [])
 
-
-
+  const handleLogout = async () => {
+  await logout(); // elimina la cookie desde el servidor
+  router.push("/login");
+};
   return (
     <nav className="bg-gray-900 shadow-md border-b border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -116,7 +121,10 @@ const Navbar = () => {
                       </div>
                     )}
                   </div>
-                  <button className="w-full mt-2 bg-yellow-400 text-gray-900 rounded px-4 py-2 font-semibold hover:bg-yellow-300 transition">
+                  <button
+                    className="w-full mt-2 bg-yellow-400 text-gray-900 rounded px-4 py-2 font-semibold hover:bg-yellow-300 transition"
+                    onClick={handleLogout}
+                  >
                     Cerrar sesión
                   </button>
                 </div>
