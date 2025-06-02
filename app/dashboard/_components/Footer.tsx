@@ -7,9 +7,9 @@ export default function Footer() {
           <span className="text-gray-400">© {new Date().getFullYear()}</span>
         </div>
         <div className="flex gap-6 text-gray-400 text-sm">
-          <a href="#" className="hover:text-yellow-400 transition-colors">Aviso de Privacidad</a>
-          <a href="#" className="hover:text-yellow-400 transition-colors">Términos y Condiciones</a>
-          <a href="#" className="hover:text-yellow-400 transition-colors">Contacto</a>
+          <a href="../../privacy/" className="hover:text-yellow-400 transition-colors">Aviso de Privacidad</a>
+          <a href="../../terms/" className="hover:text-yellow-400 transition-colors">Términos y Condiciones</a>
+          <a href="../../contacto/" className="hover:text-yellow-400 transition-colors">Contacto</a>
         </div>
         <div className="flex gap-4 mt-4 md:mt-0">
           <a href="#" aria-label="Facebook" className="text-gray-400 hover:text-yellow-400 transition-colors">

@@ -1,5 +1,5 @@
 import Carrousel from './_components/Carrousel';
-import MovieGrid from './_components/MovieGrid';
+import MovieCarousel from './_components/MovieCarousel';
 import Navbar from './_components/Navbar';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -8,7 +8,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       
       <div className="space-y-8">
         <Carrousel />
-        <MovieGrid />
+        <MovieCarousel />
       </div>
       <main className="p-4">{children}</main>
     </>
