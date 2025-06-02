@@ -46,7 +46,7 @@ export default function SeatsForms({
   // Handler para redirigir a la página de pagos
   const handlePaymentRedirect = () => {
     if (selectedShowtime) {
-      // Extraer el roomId desde selectedShowtime, ya sea como string o como objeto
+      // Extraer roomId de selectedShowtime (string o Room)
       let roomId = "";
       if (typeof selectedShowtime.room === "string") {
         roomId = selectedShowtime.room;
@@ -56,13 +56,11 @@ export default function SeatsForms({
       ) {
         roomId = selectedShowtime.room.roomId;
       }
-
-      // Además, concatenar los asientos seleccionados para pasarlos como query param
+      // Concatenar asientos seleccionados
       const seats = selectedSeats.join(",");
-
-      // Redirigir a la página de pagos con los query params necesarios
+      // Redirigir a la página orderSummary con los parámetros requeridos
       router.push(
-        `/dashboard/payments?showtimeId=${selectedShowtime.id}&roomId=${roomId}&seats=${encodeURIComponent(
+        `/dashboard/payments/orderSummary?showtimeId=${selectedShowtime.id}&roomId=${roomId}&seats=${encodeURIComponent(
           seats
         )}`
       );
@@ -90,14 +88,12 @@ export default function SeatsForms({
                 {row.map((seat) => (
                   <button
                     key={seat}
-                    className={`w-8 h-8 m-1 rounded-full border text-xs
-                      ${
-                        selectedSeats.includes(seat)
-                          ? "bg-blue-500 text-white"
-                          : "bg-white hover:bg-blue-100"
-                      }`}
+                    className={`w-8 h-8 m-1 rounded-full border text-xs ${
+                      selectedSeats.includes(seat)
+                        ? "bg-blue-500 text-white"
+                        : "bg-white hover:bg-blue-100"
+                    }`}
                     onClick={() => handleSeatClick(seat)}
-                    disabled={false}
                   >
                     {seat.replace(/^[A-Z]/, "")}
                   </button>
@@ -114,7 +110,7 @@ export default function SeatsForms({
         <div className="flex gap-6 items-start">
           <img
             src={movie.movieImageUrl}
-            alt="imagen peli"
+            alt="Imagen de la película"
             className="w-40 h-60 object-cover rounded-lg shadow-lg border-2 border-blue-300"
           />
           <div className="flex-1 flex flex-col justify-center">
@@ -122,9 +118,24 @@ export default function SeatsForms({
               {movie.movieTitle}
             </h3>
             <p className="text-gray-600 mb-2">
-              <span className="font-semibold">{movie.movieDurationMinutes} min</span>
-              | <span className="font-semibold">{movie.movieGenre}</span>
+              <span className="font-semibold">
+                {movie.movieDurationMinutes} min
+              </span>{" "}
+              |{" "}
+              <span className="font-semibold">{movie.movieGenre}</span>
             </p>
+            <div className="text-xs text-gray-600 mt-2">
+              {movie.movieDescription}
+            </div>
+            <div className="text-xs text-blue-500 mt-2">
+              <a
+                href={movie.movieTrailer}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Ver trailer
+              </a>
+            </div>
           </div>
         </div>
         <div className="mt-4">
@@ -140,7 +151,9 @@ export default function SeatsForms({
           <div className="text-gray-700 min-h-[24px]">{selectedSeats.length}</div>
         </div>
         <div className="mt-4">
-          <label className="block font-semibold mb-1">Asientos seleccionados</label>
+          <label className="block font-semibold mb-1">
+            Asientos seleccionados
+          </label>
           <div className="text-gray-700 min-h-[24px]">
             {selectedSeats.length > 0 ? selectedSeats.join(", ") : "Ninguno"}
           </div>
@@ -149,7 +162,9 @@ export default function SeatsForms({
           <label className="block font-semibold mb-1">Resumen del pedido:</label>
           <div className="text-2xl font-bold text-green-700">
             {selectedShowtime
-              ? `$${(selectedSeats.length * parseFloat(selectedShowtime.price)).toFixed(2)}`
+              ? `$${(
+                  selectedSeats.length * parseFloat(selectedShowtime.price)
+                ).toFixed(2)}`
               : "$0.00"}
           </div>
         </div>
