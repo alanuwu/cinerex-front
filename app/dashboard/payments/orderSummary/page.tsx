@@ -26,7 +26,7 @@ export async function getPaymentData(searchParams: {
     }
 
     const showtime: Showtime = await res.json();
-    console.log("Showtime data:", showtime); 
+    console.log("Showtime data:", showtime);
 
     const ticketCount = seats ? seats.split(",").length : 1;
 
@@ -41,6 +41,8 @@ export async function getPaymentData(searchParams: {
       seats: seats
         ? seats.split(",").map((seat: string) => ({ type: seat, price: 150.0 }))
         : [],
+      showtimeId: showtime.id,
+      showtime, // Objeto completo
       // Mapeo de la información de la película
       movie:
         typeof showtime.movie === "object" && showtime.movie !== null

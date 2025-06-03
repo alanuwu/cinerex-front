@@ -1,19 +1,44 @@
 "use client";
 import React, { useState } from "react";
-import { Movie, Showtime, Room, Ticket } from "@/entities";
+import { Movie, Showtime, Room, Ticket, Customer } from "@/entities";
+import { createTicket } from "@/app/boletos/api";
+import { useRouter } from "next/navigation";
+
+async function getAuthenticatedCustomer(): Promise<Customer> {
+  const token = localStorage.getItem("token"); 
+
+  const res = await fetch(
+    `${
+      process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:4000"
+    }/customers/me`,
+    {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    }
+  );
+  if (!res.ok) {
+    throw new Error("No se pudo obtener el cliente autenticado");
+  }
+  return await res.json(); // Customer real
+}
 
 interface PayTicketsProps {
-  paymentData: any; // Reemplaza 'any' por el tipo adecuado según tu backend
+  paymentData: any; // 
 }
 
 export default function PayTickets({ paymentData }: PayTicketsProps) {
+  const router = useRouter(); // <-- agrega esto
+
   // Estados para los campos de detalles de pago (tarjeta)
   const [cardNumber, setCardNumber] = useState("");
   const [expiration, setExpiration] = useState("");
   const [cvv, setCvv] = useState("");
 
-  const handleCardPayment = () => {
-    // Validar que los campos obligatorios estén completos
+  const handleCardPayment = async () => {
+    // Valida campos obligatorios 
     if (!cardNumber || !expiration || !cvv) {
       alert("Por favor, complete todos los campos de detalles de pago.");
       return;
@@ -21,17 +46,38 @@ export default function PayTickets({ paymentData }: PayTicketsProps) {
     // Confirmar el pago
     const confirmPayment = window.confirm("¿Desea confirmar el pago?");
     if (confirmPayment) {
-      // Lógica para procesar el pago.
-      alert("¡Pago exitoso, gracias por su compra!. Puede revisar su boleto en nuestra pagina.");
+      try {
+        // Obtener la información del cliente autenticado dinámicamente
+        const customer = await getAuthenticatedCustomer();
+        console.log("Customer data:", customer); // datos
+
+        // Se arma el payload con los datos del boleto a crear.
+        const ticketPayload = {
+          price: Number(paymentData.total),
+          purchaseDate: new Date().toISOString(),
+          customer: customer.customerId, // solo el UUID
+          showtime: paymentData.showtime.id, // solo el UUID
+        };
+
+        console.log("Ticket payload:", ticketPayload);
+
+        //api.ts
+        await createTicket(ticketPayload);
+        alert(
+          "¡Pago exitoso, gracias por su compra! Puede revisar su boleto en nuestra página."
+        );
+        router.push("/boletos"); 
+      } catch (error: any) {
+        alert("Error al crear el ticket: " + error.message);
+      }
     }
   };
 
   return (
     <main className="p-8 flex flex-col md:flex-row gap-8">
-      {/* Detalles del cliente y métodos de pago */}
+      {/* Sección de Datos del Pago */}
       <section className="flex-1 bg-white shadow-md p-6 rounded-2xl">
         <h2 className="text-2xl font-bold mb-4">Detalles del Pago</h2>
-
         {/* Datos personales */}
         <div className="mb-6">
           <div className="flex items-center justify-between">
@@ -65,8 +111,7 @@ export default function PayTickets({ paymentData }: PayTicketsProps) {
             </div>
           </div>
         </div>
-
-        {/* Método de pago: Formulario de Tarjeta */}
+        {/* Método de pago */}
         <div className="mb-6">
           <div className="flex items-center justify-between">
             <div className="font-semibold">
@@ -128,7 +173,6 @@ export default function PayTickets({ paymentData }: PayTicketsProps) {
           </div>
         </div>
       </section>
-
       {/* Resumen del pedido */}
       <section className="flex-1 bg-white shadow-md p-6 rounded-2xl">
         <h2 className="text-2xl font-bold mb-4">Tu pedido</h2>
@@ -159,22 +203,18 @@ export default function PayTickets({ paymentData }: PayTicketsProps) {
             </div>
           </div>
         </div>
-
         <div className="mb-4">
           <div className="text-sm font-semibold">Cine</div>
           <div className="text-gray-700">{paymentData.cinema}</div>
         </div>
-
         <div className="mb-4">
           <div className="text-sm font-semibold">Fecha y hora</div>
           <div className="text-gray-700">{paymentData.dateAndTime}</div>
         </div>
-
         <div className="mb-4">
           <div className="text-sm font-semibold">Sala</div>
           <div className="text-gray-700">{paymentData.room}</div>
         </div>
-
         <div className="mb-4">
           <div className="text-sm font-semibold">Asientos</div>
           <div className="flex flex-col gap-2">
@@ -200,7 +240,6 @@ export default function PayTickets({ paymentData }: PayTicketsProps) {
             )}
           </div>
         </div>
-
         <div className="mt-4 pt-4 border-t">
           <div className="flex items-center justify-between font-semibold">
             <div>Total</div>
