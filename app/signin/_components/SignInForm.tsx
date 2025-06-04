@@ -13,6 +13,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { Customer } from "@/entities";
 import Link from "next/link";
+import { user } from "@heroui/theme";
 
 export default function SignUpForm() {
   const [customer, setCustomer] = useState<Omit<Customer, "customerId" | "tickets" | "user">>({
@@ -69,42 +70,59 @@ export default function SignUpForm() {
     setLoading(true);
 
     try {
-      // Registrar usuario en /auth
-      const response = await fetch(`${API_URL}/auth`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userEmail: customer.customerEmail, userPassword }),
-      });
+  
+  const response = await fetch(`${API_URL}/auth`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ userEmail: customer.customerEmail, userPassword }),
+  });
 
-      if (!response.ok) {
-        const errorData = await response.json();
+  if (!response.ok) {
+    const errorData = await response.json();
 
-        if (response.status === 409) {
-          setError("Este correo ya está en uso, por favor escribe otro.");
-          setLoading(false);
-          return;
-        }
+    if (response.status === 409) {
+      setError("Este correo ya está en uso, por favor escribe otro.");
+      setLoading(false);
+      return;
+    }
 
-        throw new Error(
-          errorData.message || "Error al registrar. Intenta con otro correo."
-        );
-      }
+    throw new Error(
+      errorData.message || "Error al registrar. Intenta con otro correo."
+    );
+  }
 
-      // Registrar usuario como cliente en /customers
-      await fetch(`${API_URL}/customers`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          customerName: customer.customerName,
-          customerLastName: customer.customerLastName,
-          customerEmail: customer.customerEmail,
-          customerPhoneNumber: customer.customerPhoneNumber,
-        }),
-      });
+
+  const userResponse = await fetch(`${API_URL}/auth/email/${customer.customerEmail}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!userResponse.ok) {
+    throw new Error("No se pudo obtener el usuario después del registro.");
+  }
+
+  const user = await userResponse.json();
+  console.log("Usuario obtenido:", user);
+
+ 
+  await fetch(`${API_URL}/customers`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      customerName: customer.customerName,
+      customerLastName: customer.customerLastName,
+      customerEmail: customer.customerEmail,
+      customerPhoneNumber: customer.customerPhoneNumber,
+      user: user.userId, 
+    }),
+  });
+
 
       alert("Registro exitoso. Redirigiendo al login");
       router.push("/login");
