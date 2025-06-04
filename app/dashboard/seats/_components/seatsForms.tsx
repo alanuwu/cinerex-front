@@ -15,11 +15,6 @@ export default function SeatsForms({
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
   const router = useRouter();
 
-  useEffect(() => {
-    console.log("Selected Showtime:", selectedShowtime);
-    console.log("Room Data:", room);
-  }, [selectedShowtime, room]);
-
   const getPrice = () => (selectedShowtime ? selectedShowtime.price : "N/A");
   const getRoomName = () => (room ? room.roomName : "Sala no disponible");
   const getRoomCapacity = () => (room ? room.roomCapacity : 0);
@@ -37,34 +32,55 @@ export default function SeatsForms({
     }).filter((seat): seat is string => seat !== null)
   );
 
+  const [occupiedSeats, setOccupiedSeats] = useState<string[]>(() => {
+
+    const saved = typeof window !== "undefined" && localStorage.getItem("occupiedSeats");
+    if (saved) {
+      try {
+        return JSON.parse(saved) as string[];
+      } catch {
+
+      }
+    }
+
+    const allSeats = seatRows.flat();
+    const totalSeats = allSeats.length;
+    const remainingSeats = selectedShowtime?.remainingSeats ?? totalSeats;
+    const occupiedCount = totalSeats - remainingSeats;
+    const shuffled = [...allSeats].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, occupiedCount);
+  });
+
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("occupiedSeats", JSON.stringify(occupiedSeats));
+    }
+  }, [occupiedSeats]);
+
   const handleSeatClick = (seat: string) => {
     setSelectedSeats((prev) =>
       prev.includes(seat) ? prev.filter((s) => s !== seat) : [...prev, seat]
     );
   };
 
-  // Handler para redirigir a la página de pagos
   const handlePaymentRedirect = () => {
-    if (selectedShowtime) {
-      // Extraer roomId de selectedShowtime (string o Room)
-      let roomId = "";
-      if (typeof selectedShowtime.room === "string") {
-        roomId = selectedShowtime.room;
-      } else if (
-        typeof selectedShowtime.room === "object" &&
-        selectedShowtime.room !== null
-      ) {
-        roomId = selectedShowtime.room.roomId;
-      }
-      // Concatenar asientos seleccionados
-      const seats = selectedSeats.join(",");
-      // Redirigir a la página orderSummary con los parámetros requeridos
-      router.push(
-        `/dashboard/payments/orderSummary?showtimeId=${selectedShowtime.id}&roomId=${roomId}&seats=${encodeURIComponent(
-          seats
-        )}`
-      );
+    if (!selectedShowtime) return;
+    let roomId = "";
+    if (typeof selectedShowtime.room === "string") {
+      roomId = selectedShowtime.room;
+    } else if (
+      typeof selectedShowtime.room === "object" &&
+      selectedShowtime.room !== null
+    ) {
+      roomId = selectedShowtime.room.roomId;
     }
+    const seats = selectedSeats.join(",");
+    router.push(
+      `/dashboard/payments/orderSummary?showtimeId=${selectedShowtime.id}&roomId=${roomId}&seats=${encodeURIComponent(
+        seats
+      )}`
+    );
   };
 
   return (
@@ -82,25 +98,46 @@ export default function SeatsForms({
               </span>
             </div>
           </div>
+
+          {/* Asientos con etiquetas de fila */}
           <div className="bg-gray-100 p-6 rounded-lg shadow-md">
-            {seatRows.map((row, i) => (
-              <div key={i} className="flex justify-center mb-2">
-                {row.map((seat) => (
-                  <button
-                    key={seat}
-                    className={`w-8 h-8 m-1 rounded-full border text-xs ${
-                      selectedSeats.includes(seat)
-                        ? "bg-blue-500 text-white"
-                        : "bg-white hover:bg-blue-100"
-                    }`}
-                    onClick={() => handleSeatClick(seat)}
-                  >
-                    {seat.replace(/^[A-Z]/, "")}
-                  </button>
-                ))}
-              </div>
-            ))}
+            {seatRows.map((row, i) => {
+              const rowLabel = String.fromCharCode(65 + i);
+              return (
+                <div key={i} className="flex items-center justify-center mb-2">
+                  {/* Letra de fila */}
+                  <span className="w-6 text-center font-bold text-gray-700 mr-2">
+                    {rowLabel}
+                  </span>
+                  {/* Botones de asientos */}
+                  <div className="flex">
+                    {row.map((seat) => {
+                      const isAvailable = !occupiedSeats.includes(seat);
+                      const isSelected = selectedSeats.includes(seat);
+
+                      return (
+                        <button
+                          key={seat}
+                          disabled={!isAvailable}
+                          className={`w-8 h-8 m-1 rounded-full border text-xs ${
+                            isAvailable
+                              ? isSelected
+                                ? "bg-blue-500 text-white"
+                                : "bg-white hover:bg-blue-100"
+                              : "bg-gray-400 text-white cursor-not-allowed"
+                          }`}
+                          onClick={() => isAvailable && handleSeatClick(seat)}
+                        >
+                          {seat.replace(/^[A-Z]/, "")}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
           </div>
+
           <div className="mt-2 text-xs text-gray-500">{getRoomName()}</div>
         </div>
       </section>
@@ -138,6 +175,7 @@ export default function SeatsForms({
             </div>
           </div>
         </div>
+
         <div className="mt-4">
           <label className="block font-semibold mb-1">Precio</label>
           <div className="text-gray-700 min-h-[24px]">{`$${getPrice()}`}</div>
@@ -151,9 +189,7 @@ export default function SeatsForms({
           <div className="text-gray-700 min-h-[24px]">{selectedSeats.length}</div>
         </div>
         <div className="mt-4">
-          <label className="block font-semibold mb-1">
-            Asientos seleccionados
-          </label>
+          <label className="block font-semibold mb-1">Asientos seleccionados</label>
           <div className="text-gray-700 min-h-[24px]">
             {selectedSeats.length > 0 ? selectedSeats.join(", ") : "Ninguno"}
           </div>
@@ -179,4 +215,3 @@ export default function SeatsForms({
     </main>
   );
 }
-
