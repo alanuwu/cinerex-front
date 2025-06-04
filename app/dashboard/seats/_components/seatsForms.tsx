@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import type { Movie, Room, Showtime } from "@/entities";
 
 export default function SeatsForms({
@@ -12,8 +13,8 @@ export default function SeatsForms({
   selectedShowtime: Showtime | null;
 }) {
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
+  const router = useRouter();
 
-  // Log para inspeccionar el contenido de selectedShowtime y room
   useEffect(() => {
     console.log("Selected Showtime:", selectedShowtime);
     console.log("Room Data:", room);
@@ -23,37 +24,54 @@ export default function SeatsForms({
   const getRoomName = () => (room ? room.roomName : "Sala no disponible");
   const getRoomCapacity = () => (room ? room.roomCapacity : 0);
 
-  // Calcula columnas (entre 8 y 16 columnas)
   const roomCapacity = getRoomCapacity();
   const columns = Math.max(8, Math.min(16, Math.ceil(Math.sqrt(roomCapacity))));
   const rows = Math.ceil(roomCapacity / columns);
 
-  // Genera los asientos según la capacidad de la sala
   const seatRows = Array.from({ length: rows }, (_, i) =>
-    Array.from(
-      { length: columns },
-      (_, j) => {
-        const seatNumber = i * columns + j + 1;
-        return seatNumber <= roomCapacity
-          ? `${String.fromCharCode(65 + i)}${j + 1}`
-          : null;
-      }
-    ).filter((seat): seat is string => seat !== null) // Filtra valores null
+    Array.from({ length: columns }, (_, j) => {
+      const seatNumber = i * columns + j + 1;
+      return seatNumber <= roomCapacity
+        ? `${String.fromCharCode(65 + i)}${j + 1}`
+        : null;
+    }).filter((seat): seat is string => seat !== null)
   );
 
   const handleSeatClick = (seat: string) => {
     setSelectedSeats((prev) =>
-      prev.includes(seat)
-        ? prev.filter((s) => s !== seat)
-        : [...prev, seat]
+      prev.includes(seat) ? prev.filter((s) => s !== seat) : [...prev, seat]
     );
+  };
+
+  // Handler para redirigir a la página de pagos
+  const handlePaymentRedirect = () => {
+    if (selectedShowtime) {
+      // Extraer roomId de selectedShowtime (string o Room)
+      let roomId = "";
+      if (typeof selectedShowtime.room === "string") {
+        roomId = selectedShowtime.room;
+      } else if (
+        typeof selectedShowtime.room === "object" &&
+        selectedShowtime.room !== null
+      ) {
+        roomId = selectedShowtime.room.roomId;
+      }
+      // Concatenar asientos seleccionados
+      const seats = selectedSeats.join(",");
+      // Redirigir a la página orderSummary con los parámetros requeridos
+      router.push(
+        `/dashboard/payments/orderSummary?showtimeId=${selectedShowtime.id}&roomId=${roomId}&seats=${encodeURIComponent(
+          seats
+        )}`
+      );
+    }
   };
 
   return (
     <main className="p-8 flex flex-col md:flex-row gap-8">
       {/* Selector de asientos */}
       <section className="flex-1 bg-white shadow-md p-6 rounded-2xl flex flex-col items-center">
-        <h2 className="text-xl font-bold mb-4">Selecciona tus asientos</h2>
+        <h2 className="text-2xl font-bold mb-4">Selecciona tus asientos</h2>
         <div className="border-b w-full mb-4" />
         <div className="flex flex-col items-center w-full">
           {/* Pantalla simulada */}
@@ -70,14 +88,12 @@ export default function SeatsForms({
                 {row.map((seat) => (
                   <button
                     key={seat}
-                    className={`w-8 h-8 m-1 rounded-full border text-xs
-                      ${
-                        selectedSeats.includes(seat)
-                          ? "bg-blue-500 text-white"
-                          : "bg-white hover:bg-blue-100"
-                      }`}
+                    className={`w-8 h-8 m-1 rounded-full border text-xs ${
+                      selectedSeats.includes(seat)
+                        ? "bg-blue-500 text-white"
+                        : "bg-white hover:bg-blue-100"
+                    }`}
                     onClick={() => handleSeatClick(seat)}
-                    disabled={false}
                   >
                     {seat.replace(/^[A-Z]/, "")}
                   </button>
@@ -88,24 +104,38 @@ export default function SeatsForms({
           <div className="mt-2 text-xs text-gray-500">{getRoomName()}</div>
         </div>
       </section>
+
       {/* Resumen y detalles de la película */}
       <section className="flex-1 bg-white shadow-md p-6 rounded-2xl flex flex-col gap-4">
         <div className="flex gap-6 items-start">
           <img
             src={movie.movieImageUrl}
-            alt="imagen peli"
+            alt="Imagen de la película"
             className="w-40 h-60 object-cover rounded-lg shadow-lg border-2 border-blue-300"
           />
           <div className="flex-1 flex flex-col justify-center">
-            <h3 className="text-xl font-bold border-b-2 border-gray-200 pb-1 mb-2">
+            <h3 className="text-2xl font-bold border-b-2 border-gray-200 pb-1 mb-2">
               {movie.movieTitle}
             </h3>
             <p className="text-gray-600 mb-2">
               <span className="font-semibold">
                 {movie.movieDurationMinutes} min
-              </span>
-              | <span className="font-semibold">{movie.movieGenre}</span>
+              </span>{" "}
+              |{" "}
+              <span className="font-semibold">{movie.movieGenre}</span>
             </p>
+            <div className="text-xs text-gray-600 mt-2">
+              {movie.movieDescription}
+            </div>
+            <div className="text-xs text-blue-500 mt-2">
+              <a
+                href={movie.movieTrailer}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Ver trailer
+              </a>
+            </div>
           </div>
         </div>
         <div className="mt-4">
@@ -118,12 +148,12 @@ export default function SeatsForms({
         </div>
         <div className="mt-4">
           <label className="block font-semibold mb-1">Boletos (cantidad)</label>
-          <div className="text-gray-700 min-h-[24px]">
-            {selectedSeats.length}
-          </div>
+          <div className="text-gray-700 min-h-[24px]">{selectedSeats.length}</div>
         </div>
         <div className="mt-4">
-          <label className="block font-semibold mb-1">Asientos seleccionados</label>
+          <label className="block font-semibold mb-1">
+            Asientos seleccionados
+          </label>
           <div className="text-gray-700 min-h-[24px]">
             {selectedSeats.length > 0 ? selectedSeats.join(", ") : "Ninguno"}
           </div>
@@ -132,15 +162,16 @@ export default function SeatsForms({
           <label className="block font-semibold mb-1">Resumen del pedido:</label>
           <div className="text-2xl font-bold text-green-700">
             {selectedShowtime
-              ? `$${(selectedSeats.length * parseFloat(selectedShowtime.price)).toFixed(
-                  2
-                )}`
+              ? `$${(
+                  selectedSeats.length * parseFloat(selectedShowtime.price)
+                ).toFixed(2)}`
               : "$0.00"}
           </div>
         </div>
         <button
           className="mt-6 w-full bg-blue-600 text-white py-3 rounded-lg text-lg font-bold hover:bg-blue-700 transition disabled:opacity-50"
           disabled={selectedSeats.length === 0}
+          onClick={handlePaymentRedirect}
         >
           Pagar
         </button>

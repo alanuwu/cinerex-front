@@ -92,12 +92,10 @@ export default function MovieForm({
       <section
         className="flex-1 bg-white shadow-md p-6"
         style={{
-          border: "3px solid",
-          borderImage: "linear-gradient(90deg, #3b82f6, #60a5fa, #3b82f6) 1",
           borderRadius: "24px",
         }}
       >
-        <h2 className="text-xl font-bold mb-4">Detalles de la función</h2>
+        <h2 className="text-2xl font-bold text-center mb-4">Detalles de la función</h2>
         <div className="mb-4">
           <label className="block font-semibold mb-1">Idioma</label>
           <div className="flex gap-4">
@@ -141,7 +139,9 @@ export default function MovieForm({
           </div>
         </div>
         <div className="mb-4">
-          <label className="block font-semibold mb-1">Horarios Disponibles</label>
+          <label className="block font-semibold mb-1 text-lg">
+            Horarios Disponibles
+          </label>
           <div className="grid grid-cols-3 gap-2">
             {horariosFiltrados.map((st) => (
               <button
@@ -179,8 +179,6 @@ export default function MovieForm({
       <section
         className="flex-1 bg-white shadow-md p-6 flex flex-col gap-4"
         style={{
-          border: "3px solid",
-          borderImage: "linear-gradient(90deg, #3b82f6, #60a5fa, #3b82f6) 1",
           borderRadius: "24px",
         }}
       >
