@@ -138,9 +138,6 @@ export default function TicketCards() {
                   <span className="font-semibold">Teléfono:</span> {ticket.customer.customerPhoneNumber}
                 </li>
                 <li>
-                  <span className="font-semibold">ID Cliente:</span> {ticket.customer.customerId}
-                </li>
-                <li>
                   <span className="font-semibold">Precio del boleto:</span> ${ticket.price}
                 </li>
               </ul>
