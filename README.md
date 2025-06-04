@@ -104,10 +104,6 @@ document.cookie = "auth_for_cinerex=; expires=Thu, 01 Jan 1970 00:00:00 UTC; pat
 * Crear funciones asignando películas y horarios
 * Validación y carga dinámica
 
-### 👤 Empleados
-
-* Crear empleados (interfaz y lógica lista)
-
 ---
 
 ## 🧪 Validaciones

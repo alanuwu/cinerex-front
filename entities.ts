@@ -25,7 +25,7 @@ export interface Customer{
 
   tickets: Ticket[];
 
-  user: User | string;
+  user: User;
 }
 
 export interface Movie {
