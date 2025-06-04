@@ -76,14 +76,14 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f8fafc] via-[#e0f2fe] to-[#bae6fd] px-0">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-10 space-y-7 border border-[#bae6fd]">
+    <div className="min-h-screen flex items-center justify-center px-2">
+      <div className="w-full max-w-md bg-white rounded-xl shadow-xl p-10 space-y-7 border border-gray-200">
         {/* Logo y título */}
         <div className="flex flex-col items-center mb-2">
-          <span className="text-4xl font-extrabold text-[#38bdf8] drop-shadow mb-1 tracking-tight">
+          <span className="text-4xl font-extrabold text-gray-800 drop-shadow mb-1 tracking-tight">
             CineRex
           </span>
-          <span className="text-base text-[#0ea5e9] font-semibold mb-2 tracking-wide">
+          <span className="text-base text-gray-500 font-semibold mb-2 tracking-wide text-center pt-2">
             ¡Bienvenido! Inicia sesión para disfrutar del cine
           </span>
         </div>
@@ -91,12 +91,12 @@ export default function LoginForm() {
           {/* Email */}
           <label
             htmlFor="email"
-            className="block text-sm font-medium mb-1 text-[#334155]"
+            className="block text-sm font-medium mb-1 text-gray-700"
           >
             Correo Electrónico
           </label>
           <div className="relative mb-2">
-            <EnvelopeIcon className="w-5 h-5 text-[#38bdf8] absolute top-2.5 left-3" />
+            <EnvelopeIcon className="w-5 h-5 text-gray-400 absolute top-2.5 left-3" />
             <input
               type="email"
               id="email"
@@ -105,24 +105,24 @@ export default function LoginForm() {
               className={`pl-10 pr-3 py-2 w-full rounded-lg border ${
                 error.toLowerCase().includes("correo")
                   ? "border-red-400"
-                  : "border-[#bae6fd]"
+                  : "border-gray-300"
               } focus:outline-none focus:ring-2 ${
                 error.toLowerCase().includes("correo")
                   ? "focus:ring-red-400"
-                  : "focus:ring-[#38bdf8]"
-              } text-base bg-[#e0f2fe]`}
+                  : "focus:ring-gray-400"
+              } text-base bg-gray-50`}
               required
             />
           </div>
           {/* Password */}
           <label
             htmlFor="password"
-            className="block text-sm font-medium mb-1 text-[#334155]"
+            className="block text-sm font-medium mb-1 text-gray-700"
           >
             Contraseña
           </label>
           <div className="relative mb-2">
-            <LockClosedIcon className="w-5 h-5 text-[#38bdf8] absolute top-2.5 left-3" />
+            <LockClosedIcon className="w-5 h-5 text-gray-400 absolute top-2.5 left-3" />
             <input
               type={showPassword ? "text" : "password"}
               id="password"
@@ -131,18 +131,18 @@ export default function LoginForm() {
               className={`pl-10 pr-10 py-2 w-full rounded-lg border ${
                 error.toLowerCase().includes("contraseña")
                   ? "border-red-400"
-                  : "border-[#bae6fd]"
+                  : "border-gray-300"
               } focus:outline-none focus:ring-2 ${
                 error.toLowerCase().includes("contraseña")
                   ? "focus:ring-red-400"
-                  : "focus:ring-[#38bdf8]"
-              } text-base bg-[#e0f2fe]`}
+                  : "focus:ring-gray-400"
+              } text-base bg-gray-50`}
               required
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-2.5 text-[#38bdf8]"
+              className="absolute right-3 top-2.5 text-gray-400"
               tabIndex={-1}
             >
               {showPassword ? (
@@ -161,7 +161,7 @@ export default function LoginForm() {
           {/* Submit */}
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-[#38bdf8] to-[#0ea5e9] text-white py-2 text-base rounded-lg font-bold hover:from-[#0ea5e9] hover:to-[#38bdf8] transition-colors shadow-lg disabled:opacity-50"
+            className="w-full bg-gray-800 text-white py-2 text-base rounded-lg font-bold hover:bg-gray-700 transition-colors shadow disabled:opacity-50"
             disabled={loading}
           >
             {loading ? "Iniciando sesión..." : "Entrar"}
@@ -169,11 +169,11 @@ export default function LoginForm() {
         </form>
         {/* Apartado para registrarse */}
         <div className="text-center mt-4">
-          <span className="text-[#334155] text-sm">
+          <span className="text-gray-500 text-sm">
             ¿No tienes cuenta?{" "}
             <Link
               href="/signin"
-              className="text-[#0ea5e9] font-semibold hover:underline"
+              className="text-gray-800 font-semibold hover:underline"
             >
               Regístrate aquí
             </Link>

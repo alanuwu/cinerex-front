@@ -13,7 +13,6 @@ import {
 } from "@heroicons/react/24/outline";
 import { Customer } from "@/entities";
 import Link from "next/link";
-import { user } from "@heroui/theme";
 
 export default function SignUpForm() {
   const [customer, setCustomer] = useState<Omit<Customer, "customerId" | "tickets" | "user">>({
@@ -70,59 +69,54 @@ export default function SignUpForm() {
     setLoading(true);
 
     try {
-  
-  const response = await fetch(`${API_URL}/auth`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ userEmail: customer.customerEmail, userPassword }),
-  });
+      const response = await fetch(`${API_URL}/auth`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userEmail: customer.customerEmail, userPassword }),
+      });
 
-  if (!response.ok) {
-    const errorData = await response.json();
+      if (!response.ok) {
+        const errorData = await response.json();
 
-    if (response.status === 409) {
-      setError("Este correo ya está en uso, por favor escribe otro.");
-      setLoading(false);
-      return;
-    }
+        if (response.status === 409) {
+          setError("Este correo ya está en uso, por favor escribe otro.");
+          setLoading(false);
+          return;
+        }
 
-    throw new Error(
-      errorData.message || "Error al registrar. Intenta con otro correo."
-    );
-  }
+        throw new Error(
+          errorData.message || "Error al registrar. Intenta con otro correo."
+        );
+      }
 
+      const userResponse = await fetch(`${API_URL}/auth/email/${customer.customerEmail}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-  const userResponse = await fetch(`${API_URL}/auth/email/${customer.customerEmail}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+      if (!userResponse.ok) {
+        throw new Error("No se pudo obtener el usuario después del registro.");
+      }
 
-  if (!userResponse.ok) {
-    throw new Error("No se pudo obtener el usuario después del registro.");
-  }
+      const user = await userResponse.json();
 
-  const user = await userResponse.json();
-  console.log("Usuario obtenido:", user);
-
- 
-  await fetch(`${API_URL}/customers`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      customerName: customer.customerName,
-      customerLastName: customer.customerLastName,
-      customerEmail: customer.customerEmail,
-      customerPhoneNumber: customer.customerPhoneNumber,
-      user: user.userId, 
-    }),
-  });
-
+      await fetch(`${API_URL}/customers`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          customerName: customer.customerName,
+          customerLastName: customer.customerLastName,
+          customerEmail: customer.customerEmail,
+          customerPhoneNumber: customer.customerPhoneNumber,
+          user: user.userId,
+        }),
+      });
 
       alert("Registro exitoso. Redirigiendo al login");
       router.push("/login");
@@ -134,75 +128,75 @@ export default function SignUpForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#1e293b] via-[#334155] to-[#0f172a] px-0">
-      <div className="w-full max-w-[420px] bg-[#f8fafc] rounded-xl shadow-2xl p-10 space-y-7 border border-[#334155]">
+    <div className="min-h-screen flex items-center justify-center px-2">
+      <div className="w-full max-w-[370px] bg-white rounded-2xl shadow-lg p-8 space-y-6 border border-gray-200">
         {/* Logo y título */}
         <div className="flex flex-col items-center mb-2">
-          <span className="text-4xl font-extrabold text-[#38bdf8] drop-shadow mb-1 tracking-tight">
+          <span className="text-3xl font-extrabold text-gray-800 drop-shadow mb-1 tracking-tight">
             CineRex
           </span>
-          <span className="text-base text-[#0ea5e9] font-semibold mb-2 tracking-wide">
+          <span className="text-base text-gray-500 font-semibold mb-2 tracking-wide text-center">
             ¡Crea tu cuenta y disfruta del cine!
           </span>
         </div>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-3">
           {/* Nombre */}
-          <label htmlFor="customerName" className="block text-sm font-medium mb-1 text-[#334155]">
+          <label htmlFor="customerName" className="block text-sm font-medium mb-1 text-gray-700">
             Nombre
           </label>
-          <div className="relative mb-2">
-            <UserIcon className="w-5 h-5 text-[#38bdf8] absolute top-2.5 left-3" />
+          <div className="relative mb-1">
+            <UserIcon className="w-5 h-5 text-gray-400 absolute top-2.5 left-3" />
             <input
               type="text"
               id="customerName"
               name="customerName"
               value={customer.customerName}
               onChange={handleChange}
-              className="pl-10 pr-3 py-2 w-full rounded-lg border border-[#bae6fd] focus:outline-none focus:ring-2 focus:ring-[#38bdf8] text-base bg-[#e0f2fe]"
+              className="pl-10 pr-3 py-2 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 text-base bg-gray-50"
               required
             />
           </div>
 
           {/* Apellido */}
-          <label htmlFor="customerLastName" className="block text-sm font-medium mb-1 text-[#334155]">
+          <label htmlFor="customerLastName" className="block text-sm font-medium mb-1 text-gray-700">
             Apellido
           </label>
-          <div className="relative mb-2">
-            <UserIcon className="w-5 h-5 text-[#38bdf8] absolute top-2.5 left-3" />
+          <div className="relative mb-1">
+            <UserIcon className="w-5 h-5 text-gray-400 absolute top-2.5 left-3" />
             <input
               type="text"
               id="customerLastName"
               name="customerLastName"
               value={customer.customerLastName}
               onChange={handleChange}
-              className="pl-10 pr-3 py-2 w-full rounded-lg border border-[#bae6fd] focus:outline-none focus:ring-2 focus:ring-[#38bdf8] text-base bg-[#e0f2fe]"
+              className="pl-10 pr-3 py-2 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 text-base bg-gray-50"
               required
             />
           </div>
 
           {/* Teléfono */}
-          <label htmlFor="customerPhoneNumber" className="block text-sm font-medium mb-1 text-[#334155]">
+          <label htmlFor="customerPhoneNumber" className="block text-sm font-medium mb-1 text-gray-700">
             Teléfono
           </label>
-          <div className="relative mb-2">
-            <PhoneIcon className="w-5 h-5 text-[#38bdf8] absolute top-2.5 left-3" />
+          <div className="relative mb-1">
+            <PhoneIcon className="w-5 h-5 text-gray-400 absolute top-2.5 left-3" />
             <input
               type="tel"
               id="customerPhoneNumber"
               name="customerPhoneNumber"
               value={customer.customerPhoneNumber}
               onChange={handleChange}
-              className="pl-10 pr-3 py-2 w-full rounded-lg border border-[#bae6fd] focus:outline-none focus:ring-2 focus:ring-[#38bdf8] text-base bg-[#e0f2fe]"
+              className="pl-10 pr-3 py-2 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 text-base bg-gray-50"
               required
             />
           </div>
 
           {/* Email */}
-          <label htmlFor="customerEmail" className="block text-sm font-medium mb-1 text-[#334155]">
+          <label htmlFor="customerEmail" className="block text-sm font-medium mb-1 text-gray-700">
             Correo Electrónico
           </label>
-          <div className="relative mb-2">
-            <EnvelopeIcon className="w-5 h-5 text-[#38bdf8] absolute top-2.5 left-3" />
+          <div className="relative mb-1">
+            <EnvelopeIcon className="w-5 h-5 text-gray-400 absolute top-2.5 left-3" />
             <input
               type="email"
               id="customerEmail"
@@ -212,22 +206,22 @@ export default function SignUpForm() {
               className={`pl-10 pr-3 py-2 w-full rounded-lg border ${
                 error.toLowerCase().includes("correo")
                   ? "border-red-400"
-                  : "border-[#bae6fd]"
+                  : "border-gray-300"
               } focus:outline-none focus:ring-2 ${
                 error.toLowerCase().includes("correo")
                   ? "focus:ring-red-400"
-                  : "focus:ring-[#38bdf8]"
-              } text-base bg-[#e0f2fe]`}
+                  : "focus:ring-gray-400"
+              } text-base bg-gray-50`}
               required
             />
           </div>
 
           {/* Password */}
-          <label htmlFor="password" className="block text-sm font-medium mb-1 text-[#334155]">
+          <label htmlFor="password" className="block text-sm font-medium mb-1 text-gray-700">
             Contraseña
           </label>
-          <div className="relative mb-2">
-            <LockClosedIcon className="w-5 h-5 text-[#38bdf8] absolute top-2.5 left-3" />
+          <div className="relative mb-1">
+            <LockClosedIcon className="w-5 h-5 text-gray-400 absolute top-2.5 left-3" />
             <input
               type={showPassword ? "text" : "password"}
               id="password"
@@ -236,22 +230,22 @@ export default function SignUpForm() {
               className={`pl-10 pr-10 py-2 w-full rounded-lg border ${
                 error.toLowerCase().includes("contraseña")
                   ? "border-red-400"
-                  : "border-[#bae6fd]"
+                  : "border-gray-300"
               } focus:outline-none focus:ring-2 ${
                 error.toLowerCase().includes("contraseña")
                   ? "focus:ring-red-400"
-                  : "focus:ring-[#38bdf8]"
-              } text-base bg-[#e0f2fe]`}
+                  : "focus:ring-gray-400"
+              } text-base bg-gray-50`}
               required
             />
           </div>
 
           {/* Confirm Password */}
-          <label htmlFor="confirmPassword" className="block text-sm font-medium mb-1 text-[#334155]">
+          <label htmlFor="confirmPassword" className="block text-sm font-medium mb-1 text-gray-700">
             Repetir Contraseña
           </label>
-          <div className="relative mb-2">
-            <LockClosedIcon className="w-5 h-5 text-[#38bdf8] absolute top-2.5 left-3" />
+          <div className="relative mb-1">
+            <LockClosedIcon className="w-5 h-5 text-gray-400 absolute top-2.5 left-3" />
             <input
               type={showPassword ? "text" : "password"}
               id="confirmPassword"
@@ -260,18 +254,18 @@ export default function SignUpForm() {
               className={`pl-10 pr-10 py-2 w-full rounded-lg border ${
                 error.toLowerCase().includes("contraseña")
                   ? "border-red-400"
-                  : "border-[#bae6fd]"
+                  : "border-gray-300"
               } focus:outline-none focus:ring-2 ${
                 error.toLowerCase().includes("contraseña")
                   ? "focus:ring-red-400"
-                  : "focus:ring-[#38bdf8]"
-              } text-base bg-[#e0f2fe]`}
+                  : "focus:ring-gray-400"
+              } text-base bg-gray-50`}
               required
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-2.5 text-[#38bdf8]"
+              className="absolute right-3 top-2.5 text-gray-400"
               tabIndex={-1}
             >
               {showPassword ? (
@@ -290,7 +284,7 @@ export default function SignUpForm() {
           {/* Submit */}
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-[#38bdf8] to-[#0ea5e9] text-white py-2 text-base rounded-lg font-bold hover:from-[#0ea5e9] hover:to-[#38bdf8] transition-colors shadow-lg disabled:opacity-50"
+            className="w-full bg-gray-800 text-white py-2 text-base rounded-lg font-bold hover:bg-gray-700 transition-colors shadow disabled:opacity-50"
             disabled={loading}
           >
             {loading ? "Registrando..." : "Registrarse"}
@@ -298,11 +292,11 @@ export default function SignUpForm() {
         </form>
         {/* Apartado para iniciar sesión */}
         <div className="text-center mt-4">
-          <span className="text-[#334155] text-sm">
+          <span className="text-gray-500 text-sm">
             ¿Ya tienes cuenta?{" "}
             <Link
               href="/login"
-              className="text-[#0ea5e9] font-semibold hover:underline"
+              className="text-gray-800 font-semibold hover:underline"
             >
               Inicia sesión aquí
             </Link>
