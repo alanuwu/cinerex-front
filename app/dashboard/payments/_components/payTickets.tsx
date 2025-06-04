@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Movie, Showtime, Room, Ticket, Customer } from "@/entities";
 import { createTicket } from "@/app/boletos/api";
 import { useRouter } from "next/navigation";
+import { API_URL } from "@/constants";
 
 async function getAuthenticatedCustomer(): Promise<Customer> {
   const token = localStorage.getItem("token"); 
@@ -19,6 +20,7 @@ async function getAuthenticatedCustomer(): Promise<Customer> {
       },
     }
   );
+  
   if (!res.ok) {
     throw new Error("No se pudo obtener el cliente autenticado");
   }
@@ -30,7 +32,7 @@ interface PayTicketsProps {
 }
 
 export default function PayTickets({ paymentData }: PayTicketsProps) {
-  const router = useRouter(); // <-- agrega esto
+  const router = useRouter(); 
 
   // Estados para los campos de detalles de pago (tarjeta)
   const [cardNumber, setCardNumber] = useState("");

@@ -92,6 +92,31 @@ export default async function PaymentOrderSummaryPage({
 }: {
   searchParams: { showtimeId?: string; seats?: string };
 }) {
+  // 1. Obtengo la data del showtime como antes:
   const paymentData = await getPaymentData(searchParams);
-  return <PayTickets paymentData={paymentData} />;
+
+  // 2. **Aquí** hago el fetch en el servidor a `/customers/me`:
+  let customer: Customer | null = null;
+  try {
+    const headers = await authHeaders(); // tu helper que devuelve { Authorization: 'Bearer ...' } o las cookies necesarias
+
+    const customerRes = await fetch(`${API_URL}/customers/me`, {
+      headers,
+      cache: "no-store", // para no cachear la respuesta
+    });
+
+    if (!customerRes.ok) {
+      // Si falla (token inválido, no hay sesión, etc.), podrías redirigir o establecer customer = null
+      throw new Error("No se pudo obtener el customer autenticado");
+    }
+
+    customer = await customerRes.json();
+  } catch (err) {
+    console.error("Error obteniendo customer desde server:", err);
+    // Aquí decides: o rediriges al login, o pasas `customer = null` y dejas que el cliente maneje el estado.
+    // Por simplicidad, lo dejamos en null y en PayTickets chequeamos que sea no-null.
+  }
+
+  // 3. Le pasamos **ambos** objetos como props al componente cliente:
+  return <PayTickets paymentData={paymentData} customer={customer!} />;
 }
